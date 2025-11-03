@@ -6,7 +6,8 @@ export interface Beer {
   abv: number | null
   ibu: number | null
   notes: string | null
+  user_id: string
   created_at: string
 }
 
-export type BeerInsert = Omit<Beer, 'id' | 'created_at'>
+export type BeerInsert = Omit<Beer, 'id' | 'created_at' | 'user_id'>

@@ -2,12 +2,15 @@
 
 import { useEffect, useState, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/contexts/AuthContext'
 import AddBeerForm from '@/components/AddBeerForm'
 import BeerList from '@/components/BeerList'
 import Statistics from '@/components/Statistics'
+import Login from '@/components/Login'
 import type { Beer } from '@/types/beer'
 
 export default function Home() {
+  const { user, loading: authLoading, signOut } = useAuth()
   const [beers, setBeers] = useState<Beer[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -15,11 +18,14 @@ export default function Home() {
   const [filterType, setFilterType] = useState<string>('all')
 
   const fetchBeers = async () => {
+    if (!user) return
+    
     try {
       setLoading(true)
       const { data, error: fetchError } = await supabase
         .from('beers')
         .select('*')
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false })
 
       if (fetchError) throw fetchError
@@ -34,8 +40,10 @@ export default function Home() {
   }
 
   useEffect(() => {
-    fetchBeers()
-  }, [])
+    if (user) {
+      fetchBeers()
+    }
+  }, [user])
 
   // Get unique beer types for filter
   const beerTypes = useMemo(() => {
@@ -58,16 +66,41 @@ export default function Home() {
     })
   }, [beers, searchQuery, filterType])
 
+  // Show login if not authenticated
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4 animate-bounce">🍺</div>
+          <p className="text-gray-500 dark:text-gray-400 text-lg">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return <Login />
+  }
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-gray-50 via-amber-50 to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">
-            🍺 Beer Inventory
-          </h1>
+          <div className="flex items-center justify-center gap-4 mb-3">
+            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 dark:from-amber-400 dark:to-orange-400 bg-clip-text text-transparent">
+              🍺 Beer Inventory
+            </h1>
+            <button
+              onClick={signOut}
+              className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors text-sm font-medium"
+              title="Sign out"
+            >
+              Sign Out
+            </button>
+          </div>
           <p className="text-gray-600 dark:text-gray-400 text-lg">
-            Track and manage your beer collection
+            Welcome, {user.email}! Track and manage your beer collection
           </p>
         </div>
 

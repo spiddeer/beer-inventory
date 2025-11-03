@@ -2,6 +2,7 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import { useState, useEffect } from "react";
+import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -52,16 +53,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gradient-to-br from-gray-50 via-amber-50 to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300`}
       >
-        {/* Dark mode toggle button */}
-        <button
-          onClick={toggleDarkMode}
-          className="fixed top-4 right-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all border-2 border-gray-200 dark:border-gray-700"
-          aria-label="Toggle dark mode"
-        >
-          <span className="text-2xl">{darkMode ? '☀️' : '🌙'}</span>
-        </button>
-        
-        {children}
+        <AuthProvider>
+          {/* Dark mode toggle button */}
+          <button
+            onClick={toggleDarkMode}
+            className="fixed top-4 right-4 z-50 p-3 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:shadow-xl transition-all border-2 border-gray-200 dark:border-gray-700"
+            aria-label="Toggle dark mode"
+          >
+            <span className="text-2xl">{darkMode ? '☀️' : '🌙'}</span>
+          </button>
+          
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

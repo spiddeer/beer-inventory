@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/contexts/AuthContext'
 import type { BeerInsert } from '@/types/beer'
 
 interface AddBeerFormProps {
@@ -9,6 +10,7 @@ interface AddBeerFormProps {
 }
 
 export default function AddBeerForm({ onBeerAdded }: AddBeerFormProps) {
+  const { user } = useAuth()
   const [formData, setFormData] = useState<BeerInsert>({
     name: '',
     brewery: '',
@@ -22,6 +24,8 @@ export default function AddBeerForm({ onBeerAdded }: AddBeerFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!user) return
+    
     setLoading(true)
     setError(null)
 
@@ -34,6 +38,7 @@ export default function AddBeerForm({ onBeerAdded }: AddBeerFormProps) {
           abv: formData.abv,
           ibu: formData.ibu,
           notes: formData.notes || null,
+          user_id: user.id,
         },
       ])
 
