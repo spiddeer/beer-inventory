@@ -1,3 +1,4 @@
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
@@ -6,10 +7,14 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get('code')
 
   if (code) {
-    // Exchange code for session (handled by Supabase client automatically)
-    return NextResponse.redirect(new URL('/', requestUrl.origin))
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    
+    await supabase.auth.exchangeCodeForSession(code)
   }
 
-  // If no code, redirect to home
+  // Redirect to home page
   return NextResponse.redirect(new URL('/', requestUrl.origin))
 }
