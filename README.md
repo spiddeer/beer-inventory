@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍺 Beer Inventory App
 
-## Getting Started
+A simple Next.js application to manually add and track your beer collection.
 
-First, run the development server:
+## Setup Instructions
+
+### 1. Database Setup
+
+1. Go to your Supabase dashboard: https://supabase.com/dashboard/project/bfnxggauazjyupvgnpbr
+2. Click on **SQL Editor** in the left sidebar
+3. Click **New Query**
+4. Copy the contents of supabase-migration.sql and paste it
+5. Click **Run** to create the beers table
+
+### 2. Environment Variables
+
+The .env.local file is already configured with your Supabase credentials:
+- Supabase URL: https://bfnxggauazjyupvgnpbr.supabase.co
+- Anon Key: Already set
+
+**Important:** Make sure .env.local is in your .gitignore to keep your keys private!
+
+### 3. Run the App
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- ✅ Add new beers with details (name, brewery, type, ABV, IBU, notes)
+- ✅ View all beers in a card-based layout
+- ✅ Automatic sorting by date added (newest first)
+- ✅ Responsive design with Tailwind CSS
 
-## Learn More
+## Tech Stack
 
-To learn more about Next.js, take a look at the following resources:
+- **Next.js 16** (App Router)
+- **TypeScript**
+- **Supabase** (Database & Backend)
+- **Tailwind CSS** (Styling)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Database Schema
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The eers table includes:
+- id (UUID) - Primary key
+- 
+ame (Text) - Required
+- rewery (Text)
+- 	ype (Text) - e.g., IPA, Lager, Stout
+- bv (Decimal) - Alcohol by volume percentage
+- ibu (Integer) - International Bitterness Units
+- 
+otes (Text)
+- created_at (Timestamp)
 
-## Deploy on Vercel
+## Next Steps
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Add delete functionality
+- Add edit functionality
+- Add search/filter
+- Add beer ratings
+- Add image upload
